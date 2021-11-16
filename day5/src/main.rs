@@ -1,10 +1,17 @@
+use itertools::Itertools;
+use std::collections::BTreeSet;
+
 fn main() {
-    let ans = include_str!("input.txt")
+    let all_set = include_str!("input.txt")
         .lines()
         .map(compute_line)
-        .max()
-        .unwrap();
-    print!("ans: {}\n", ans);
+        .collect::<BTreeSet<u32>>();
+    all_set.iter().tuple_windows().for_each(|(this, next)| {
+        if next - this != 1 {
+            print!("ans: {}", this + 1);
+            return;
+        }
+    })
 }
 
 fn compute_line(line: &str) -> u32 {
