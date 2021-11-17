@@ -1,0 +1,1 @@
+/Users/jinshang/Projects/Rust/advent_of_code_2020/day6/target/debug/day6: /Users/jinshang/Projects/Rust/advent_of_code_2020/day6/src/input.txt /Users/jinshang/Projects/Rust/advent_of_code_2020/day6/src/main.rs
