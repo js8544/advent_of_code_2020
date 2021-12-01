@@ -1,21 +1,41 @@
 use std::collections::HashSet;
 
+fn swap_jmp_nop(op: &mut Operation) {
+    *op = match *op {
+        Operation::Acc(n) => Operation::Acc(n),
+        Operation::Jmp(n) => Operation::Nop(n),
+        Operation::Nop(n) => Operation::Jmp(n),
+    };
+}
+
 fn main() {
-    let operations: Vec<Operation> = include_str!("input.txt").lines().map(parse_line).collect();
-    println!("ans: {:?}", run(operations));
+    let mut operations: Vec<Operation> =
+        include_str!("input.txt").lines().map(parse_line).collect();
+    for i in 0..operations.len() {
+        swap_jmp_nop(operations.get_mut(i).unwrap());
+
+        match run(&operations) {
+            RunResult::Done(acc) => {
+                println!("ans: {}", acc);
+            }
+            _ => (),
+        }
+
+        swap_jmp_nop(operations.get_mut(i).unwrap());
+    }
 }
 
 enum Operation {
     Acc(i64),
     Jmp(i64),
-    Nop,
+    Nop(i64),
 }
 
 fn parse_line(line: &str) -> Operation {
     match &line[..3] {
         "acc" => Operation::Acc(line[4..].parse().unwrap()),
         "jmp" => Operation::Jmp(line[4..].parse().unwrap()),
-        "nop" => Operation::Nop,
+        "nop" => Operation::Nop(line[4..].parse().unwrap()),
         _ => panic!("{} has invalid format!", line),
     }
 }
@@ -32,7 +52,7 @@ enum RunResult {
     Loop(LoopResult),
 }
 
-fn run(operations: Vec<Operation>) -> RunResult {
+fn run(operations: &Vec<Operation>) -> RunResult {
     let mut instruction = 0;
     let mut accumulator = 0;
     let mut instruction_run: HashSet<usize> = HashSet::new();
@@ -55,7 +75,7 @@ fn run(operations: Vec<Operation>) -> RunResult {
                 Operation::Jmp(num) => {
                     instruction = ((instruction as i64) + num) as usize;
                 }
-                Operation::Nop => {
+                Operation::Nop(_) => {
                     instruction += 1;
                 }
             };
