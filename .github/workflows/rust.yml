@@ -17,6 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: cargo build --verbose
+      run: for dir in day*; do cd $dir; cargo build --verbose; cd ..; done
     - name: Run tests
-      run: cargo test --verbose
+      run: for dir in day*; do cd $dir; cargo test --verbose; cd ..; done
