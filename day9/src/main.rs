@@ -20,7 +20,24 @@ fn main() {
         }))
     });
     match res {
-        Some(arr) => println!("ans: {}", arr[WINDOW_SIZE]),
+        Some(arr) => {
+            let ans = arr[WINDOW_SIZE];
+            println!("ans: {}", ans);
+            // part2
+            let range = (2..nums.len())
+                .into_iter()
+                .map(|l| {
+                    nums.windows(l)
+                        .find(|&window| window.iter().sum::<u64>() == ans)
+                })
+                .find(Option::is_some)
+                .unwrap()
+                .unwrap();
+            println!(
+                "ans: {}",
+                range.iter().min().unwrap() + range.iter().max().unwrap()
+            );
+        }
         None => println!("no ans"),
     };
 }
